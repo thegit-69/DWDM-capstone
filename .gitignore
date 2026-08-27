@@ -1,4 +1,61 @@
-initial_prompt.md
+# Environment variables
+.env
+.env.local
+.env.*.local
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.venv/
+venv/
+ENV/
+env/
+
+# Model artifacts & processed outputs
+ml/artifacts/*.pkl
+ml/artifacts/*.joblib
+ml/artifacts/*.json
+data/processed/
+*.log
+
+# Node & Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database & IDE
+*.sqlite
+*.sqlite3
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Existing rules
+PRD.md
 .agents
 zomato_dataset/
 skills-lock.json
