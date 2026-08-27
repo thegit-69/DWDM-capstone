@@ -13,7 +13,7 @@ async def lifespan(app: FastAPI):
     """Lifecycle event handler for FastAPI startup and shutdown."""
     print("=" * 60)
     print("Starting Zomato Data Warehouse & ML Analytics API")
-    print(f"PostgreSQL Database: {settings.POSTGRES_DB} on {settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}")
+    print(f"PostgreSQL Database: {settings.DB_NAME} on {settings.DB_HOST}:{settings.DB_PORT}")
     print(f"ML Artifacts Directory: {settings.ML_ARTIFACTS_DIR}")
     print("=" * 60)
     yield
@@ -68,5 +68,5 @@ if __name__ == "__main__":
         "backend.app.main:app",
         host=settings.BACKEND_HOST,
         port=settings.BACKEND_PORT,
-        reload=settings.BACKEND_RELOAD
+        reload=False
     )
