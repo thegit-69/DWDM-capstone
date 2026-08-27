@@ -4,6 +4,13 @@
 -- Database: zomato_dw
 -- ============================================================================
 
+DROP VIEW IF EXISTS vw_executive_kpis CASCADE;
+DROP VIEW IF EXISTS vw_monthly_trends CASCADE;
+DROP VIEW IF EXISTS vw_cuisine_analytics CASCADE;
+DROP VIEW IF EXISTS vw_city_analytics CASCADE;
+DROP VIEW IF EXISTS vw_top_restaurants CASCADE;
+DROP VIEW IF EXISTS vw_customer_rfm CASCADE;
+
 -- 1. EXECUTIVE KPI VIEW
 CREATE OR REPLACE VIEW vw_executive_kpis AS
 SELECT 
@@ -110,8 +117,10 @@ customer_orders AS (
         u.name,
         u.age,
         u.gender,
+        u.marital_status,
         u.occupation,
         u.monthly_income,
+        u.educational_qualifications,
         u.family_size,
         u.age_group,
         u.income_tier,
@@ -126,9 +135,10 @@ customer_orders AS (
     LEFT JOIN fact_orders f ON u.user_sk = f.user_sk AND f.is_valid_order = TRUE
     LEFT JOIN dim_date d ON f.date_sk = d.date_sk
     WHERE u.user_sk > 0
-    GROUP BY u.user_sk, u.user_id, u.name, u.age, u.gender, u.occupation,
-             u.monthly_income, u.family_size, u.age_group, u.income_tier,
-             u.customer_segment, u.churn_probability, u.is_churned
+    GROUP BY u.user_sk, u.user_id, u.name, u.age, u.gender, u.marital_status,
+             u.occupation, u.monthly_income, u.educational_qualifications,
+             u.family_size, u.age_group, u.income_tier, u.customer_segment,
+             u.churn_probability, u.is_churned
 )
 SELECT 
     co.*,
