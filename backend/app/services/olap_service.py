@@ -163,7 +163,7 @@ def get_top_restaurants(
     sort_by: str = "revenue"
 ) -> List[Dict[str, Any]]:
     """Returns top performing restaurants filterable by city, cuisine, and metric."""
-    where_clauses = ["1=1"]
+    where_clauses = ["restaurant_sk > 0"]
     params = []
 
     if city:
