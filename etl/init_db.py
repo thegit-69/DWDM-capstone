@@ -4,6 +4,15 @@ from pathlib import Path
 from datetime import date, timedelta
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+import psycopg2.extras
+
+# Ensure UTF-8 output on Windows console
+if sys.stdout.encoding != 'utf-8':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
+
 from backend.app.config import settings
 
 def create_database_if_not_exists():
@@ -25,7 +34,7 @@ def create_database_if_not_exists():
         if not exists:
             print(f"Database '{settings.DB_NAME}' does not exist. Creating...")
             cur.execute(f'CREATE DATABASE "{settings.DB_NAME}";')
-            print(f"✅ Database '{settings.DB_NAME}' created successfully.")
+            print(f"[OK] Database '{settings.DB_NAME}' created successfully.")
         else:
             print(f"Database '{settings.DB_NAME}' already exists.")
 
@@ -33,7 +42,7 @@ def create_database_if_not_exists():
         conn.close()
         return True
     except Exception as e:
-        print(f"❌ Error connecting/creating database: {e}")
+        print(f"[ERROR] connecting/creating database: {e}")
         return False
 
 def populate_dim_date(cur):
@@ -53,7 +62,7 @@ def populate_dim_date(cur):
         quarter = (month - 1) // 3 + 1
         quarter_name = f"Q{quarter}"
         year = cur_date.year
-        day_of_week = cur_date.weekday() + 1 # 1 = Monday, 7 = Sunday
+        day_of_week = cur_date.weekday() + 1  # 1 = Monday, 7 = Sunday
         day_name = cur_date.strftime("%A")
         is_weekend = day_of_week in [6, 7]
 
@@ -71,7 +80,7 @@ def populate_dim_date(cur):
     ON CONFLICT (date_sk) DO NOTHING;
     """
     psycopg2.extras.execute_batch(cur, query, date_records, page_size=1000)
-    print(f"✅ dim_date populated with {len(date_records):,} calendar day records.")
+    print(f"[OK] dim_date populated with {len(date_records):,} calendar day records.")
 
 def init_schema():
     """Executes the DDL SQL scripts in the target database."""
@@ -103,15 +112,14 @@ def init_schema():
             cur.execute(f.read())
 
         # 4. Populate dim_date
-        import psycopg2.extras
         populate_dim_date(cur)
 
         cur.close()
         conn.close()
-        print("✅ Data Warehouse Star Schema initialized successfully!")
+        print(f"[SUCCESS] Data Warehouse Star Schema initialized successfully in '{settings.DB_NAME}'!")
         return True
     except Exception as e:
-        print(f"❌ Error initializing schema: {e}")
+        print(f"[ERROR] initializing schema: {e}")
         return False
 
 if __name__ == "__main__":
